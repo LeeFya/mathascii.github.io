@@ -1,221 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:ital,wght@0,100..900;1,100..900&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
-    <title>ASCII</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASCII</title>
+
+<link rel="stylesheet" href="styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Press+Start+2P&family=Roboto:ital,wght@0,100..900;1,100..900&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
+<main>
 
-    <main>
-    <h1>ASCII TABLE</h1>
-    <div class="pixel-frame">
-        <table>
-            <thead>
-                <tr>
-                    <th>Symbol</th>
-                    <th>DEC</th>
-                    <th>OCT</th>
-                    <th>HEX</th>
-                    <th>BIN</th>
-                    <th>HTML Number</th>
-                    <th>HTML Name</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
+<h1>ASCII TABLE</h1>
 
-            <tbody id="ascii-body"></tbody>
-        </table>
-    </div>
+<!-- TABLE SELECTOR -->
+<div class="table-selector">
+    <button type="button" id="btn-main" class="active" onclick="showTable('main')">Printable ASCII</button>
+    <button type="button" id="btn-control" onclick="showTable('control')">Control ASCII</button>
+    <button type="button" id="btn-extended" onclick="showTable('extended')">Extended ASCII Windows-1252</button>
+</div>
 
-    <br><br>
+<!-- PRINTABLE ASCII -->
+<div class="pixel-frame ascii-table" id="table-main">
+<table>
+<thead>
+<tr>
+<th>Symbol</th><th>DEC</th><th>OCT</th><th>HEX</th><th>BIN</th>
+<th>HTML #</th><th>HTML Name</th><th>Description</th>
+</tr>
+</thead>
+<tbody id="ascii-body"></tbody>
+</table>
+</div>
 
-    <div class="converter">
+<!-- CONTROL ASCII -->
+<div class="pixel-frame ascii-table hidden" id="table-control">
+<table>
+<thead>
+<tr>
+<th>Symbol</th><th>DEC</th><th>BIN</th><th>HEX</th><th>Description</th>
+</tr>
+</thead>
+<tbody id="ascii-control-body"></tbody>
+</table>
+</div>
 
-    <div class="converter-row">
-        <label>From</label>
-        <select id="fromType">
-        <option value="text">Text</option>
-        <option value="bin">Binary</option>
-        <option value="dec">Decimal</option>
-        <option value="hex">Hexadecimal</option>
-        <option value="oct">Octal</option>
-        </select>
+<!-- EXTENDED ASCII -->
+<div class="pixel-frame ascii-table hidden" id="table-extended">
+<table>
+<thead>
+<tr>
+<th>Symbol</th><th>DEC</th><th>HEX</th><th>BIN</th><th>Description</th>
+</tr>
+</thead>
+<tbody id="ascii-extended-body"></tbody>
+</table>
+</div>
 
-        <label>To</label>
-        <select id="toType">
-        <option value="text">Text</option>
-        <option value="bin">Binary</option>
-        <option value="dec">Decimal</option>
-        <option value="hex">Hexadecimal</option>
-        <option value="oct">Octal</option>
-        </select>
-    </div>
+<!-- CONVERTER -->
+<div class="converter">
 
-    <textarea id="inputValue" placeholder="Enter value"></textarea>
+<div class="converter-row">
+<label>From</label>
+<select id="fromType">
+<option value="text">Text</option>
+<option value="bin">Binary</option>
+<option value="dec">Decimal</option>
+<option value="hex">Hex</option>
+<option value="oct">Octal</option>
+</select>
 
-    <button type="button" onclick="convertUniversal()">Convert</button>
+<label>To</label>
+<select id="toType">
+<option value="text">Text</option>
+<option value="bin">Binary</option>
+<option value="dec">Decimal</option>
+<option value="hex">Hex</option>
+<option value="oct">Octal</option>
+</select>
+</div>
 
-    <textarea id="outputValue" placeholder="Result" readonly></textarea>
+<textarea id="inputValue" placeholder="Enter value"></textarea>
+<button type="button" onclick="convertUniversal()">Convert</button>
+<textarea id="outputValue" placeholder="Result" readonly></textarea>
 
-    </div>
-    </main>
+</div>
 
-    <script>
-    /* ==========================
-    ASCII TABLE DATA
-    ========================== */
+</main>
 
-    const asciiDescriptions = {
-    32: ["&nbsp;", "Space"],
-    33: ["&excl;", "Exclamation mark"],
-    34: ["&quot;", "Double quotes"],
-    35: ["&num;", "Number sign"],
-    36: ["&dollar;", "Dollar"],
-    37: ["&percnt;", "Percent sign"],
-    38: ["&amp;", "Ampersand"],
-    39: ["&apos;", "Single quote"],
-    40: ["&lparen;", "Open parenthesis"],
-    41: ["&rparen;", "Close parenthesis"],
-    42: ["&ast;", "Asterisk"],
-    43: ["&plus;", "Plus"],
-    44: ["&comma;", "Comma"],
-    45: ["", "Hyphen-minus"],
-    46: ["&period;", "Period"],
-    47: ["&sol;", "Slash"],
-    58: ["&colon;", "Colon"],
-    59: ["&semi;", "Semicolon"],
-    60: ["&lt;", "Less than"],
-    61: ["&equals;", "Equals"],
-    62: ["&gt;", "Greater than"],
-    63: ["&quest;", "Question mark"],
-    64: ["&commat;", "At sign"],
-    91: ["&lsqb;", "Opening bracket"],
-    92: ["&bsol;", "Backslash"],
-    93: ["&rsqb;", "Closing bracket"],
-    94: ["&Hat;", "Caret"],
-    95: ["&lowbar;", "Underscore"],
-    96: ["&grave;", "Grave accent"],
-    123: ["&lcub;", "Opening brace"],
-    124: ["&verbar;", "Vertical bar"],
-    125: ["&rcub;", "Closing brace"],
-    126: ["&tilde;", "Tilde"],
-    127: ["", "Delete"]
-    };
+<script>
+/* ================= PRINTABLE ASCII ================= */
 
-    /* ==========================
-    BUILD ASCII TABLE
-    ========================== */
+const asciiDescriptions = {
+32:["&nbsp;","Space"],33:["&excl;","Exclamation mark"],
+34:["&quot;","Double quotes"],35:["&num;","Number sign"],
+36:["&dollar;","Dollar"],37:["&percnt;","Percent"],
+38:["&amp;","Ampersand"],39:["&apos;","Apostrophe"],
+40:["&lparen;","Open parenthesis"],41:["&rparen;","Close parenthesis"],
+42:["&ast;","Asterisk"],43:["&plus;","Plus"],
+44:["&comma;","Comma"],45:["","Hyphen-minus"],
+46:["&period;","Period"],47:["&sol;","Slash"],
+58:["&colon;","Colon"],59:["&semi;","Semicolon"],
+60:["&lt;","Less than"],61:["&equals;","Equals"],
+62:["&gt;","Greater than"],63:["&quest;","Question mark"],
+64:["&commat;","At sign"],91:["&lsqb;","Opening bracket"],
+92:["&bsol;","Backslash"],93:["&rsqb;","Closing bracket"],
+94:["&Hat;","Caret"],95:["&lowbar;","Underscore"],
+96:["&grave;","Grave accent"],123:["&lcub;","Opening brace"],
+124:["&verbar;","Vertical bar"],125:["&rcub;","Closing brace"],
+126:["&tilde;","Tilde"],127:["","Delete"]
+};
 
-    const tbody = document.getElementById("ascii-body");
+const tbody = document.getElementById("ascii-body");
 
-    for (let dec = 0; dec <= 255; dec++) {
-    const tr = document.createElement("tr");
-    //fazer o calculo automatico 
-    const oct = dec.toString(8).padStart(3, "0");
-    const hex = dec.toString(16).toUpperCase();
-    const bin = dec.toString(2).padStart(8, "0");
-    //aparecer simbolo do space e delete
-    const symbol =
-        dec === 32 ? "SP" :
-        dec === 127 ? "DEL" :
-        String.fromCharCode(dec);
-    const htmlNum = `&#${dec};`;
+for (let dec = 32; dec <= 127; dec++) {
+const symbol = dec===32?"SP":dec===127?"DEL":String.fromCharCode(dec);
+const oct = dec.toString(8).padStart(3,"0");
+const hex = dec.toString(16).toUpperCase();
+const bin = dec.toString(2).padStart(8,"0");
 
-    let htmlName = "";
-    let description = "";
+let htmlName="", description="";
+if (asciiDescriptions[dec]) {
+htmlName = asciiDescriptions[dec][0];
+description = asciiDescriptions[dec][1];
+} else if (dec>=48&&dec<=57) description="Digit";
+else if (dec>=65&&dec<=90) description="Uppercase letter";
+else if (dec>=97&&dec<=122) description="Lowercase letter";
 
-    if (asciiDescriptions[dec]) {
-        htmlName = asciiDescriptions[dec][0];
-        description = asciiDescriptions[dec][1];
-    } else if (dec >= 48 && dec <= 57) {
-        description = "Digit";
-    } else if (dec >= 65 && dec <= 90) {
-        description = "Uppercase letter";
-    } else if (dec >= 97 && dec <= 122) {
-        description = "Lowercase letter";
-    }
+tbody.innerHTML += `
+<tr>
+<td>${symbol}</td><td>${dec}</td><td>${oct}</td><td>${hex}</td>
+<td>${bin}</td><td>&#${dec};</td><td>${htmlName}</td>
+<td class="description">${description}</td>
+</tr>`;
+}
 
-    tr.innerHTML = `
-        <td>${symbol}</td>
-        <td>${dec}</td>
-        <td>${oct}</td>
-        <td>${hex}</td>
-        <td>${bin}</td>
-        <td>${htmlNum}</td>
-        <td>${htmlName}</td>
-        <td class="description">${description}</td>
+/* ================= CONTROL ASCII ================= */
+
+const controlNames = [
+"NUL","SOH","STX","ETX","EOT","ENQ","ACK","BEL","BS","TAB","LF","VT",
+"FF","CR","SO","SI","DLE","DC1","DC2","DC3","DC4","NAK","SYN","ETB",
+"CAN","EM","SUB","ESC","FS","GS","RS","US"
+];
+
+const controlDescriptions = [
+"NUL – Null character",
+"SOH – Start of Heading",
+"STX – Start of Text",
+"ETX – End of Text",
+"EOT – End of Transmission",
+"ENQ – Enquiry",
+"ACK – Acknowledge",
+"BEL – Bell (alert)",
+"BS – Backspace",
+"TAB – Horizontal Tab",
+"LF – Line Feed",
+"VT – Vertical Tab",
+"FF – Form Feed",
+"CR – Carriage Return",
+"SO – Shift Out",
+"SI – Shift In",
+"DLE – Data Link Escape",
+"DC1 – Device Control 1 (XON)",
+"DC2 – Device Control 2",
+"DC3 – Device Control 3 (XOFF)",
+"DC4 – Device Control 4",
+"NAK – Negative Acknowledge",
+"SYN – Synchronous Idle",
+"ETB – End of Transmission Block",
+"CAN – Cancel",
+"EM – End of Medium",
+"SUB – Substitute",
+"ESC – Escape",
+"FS – File Separator",
+"GS – Group Separator",
+"RS – Record Separator",
+"US – Unit Separator"
+];
+
+const controlBody = document.getElementById("ascii-control-body");
+
+for (let i = 0; i <= 31; i++) {
+    controlBody.innerHTML += `
+    <tr>
+        <td>${controlDescriptions[i].split(" – ")[0]}</td>
+        <td>${i}</td>
+        <td>${i.toString(2).padStart(8,"0")}</td>
+        <td>${i.toString(16).toUpperCase()}</td>
+        <td>${controlDescriptions[i]}</td>
+    </tr>
     `;
+}
 
-    tbody.appendChild(tr);
-    }
+/* ================= EXTENDED ASCII ================= */
+// Mapa Windows-1252 para 128–159
+const win1252 = {
+  128: 0x20AC, 130: 0x201A, 131: 0x0192,
+  132: 0x201E, 133: 0x2026, 134: 0x2020,
+  135: 0x2021, 136: 0x02C6, 137: 0x2030,
+  138: 0x0160, 139: 0x2039, 140: 0x0152,
+  141: 0xFFFD, // substituição para “invisível”
+  142: 0x017D, 143: 0xFFFD, // substituição
+  144: 0xFFFD, // substituição
+  145: 0x2018, 146: 0x2019, 147: 0x201C, 148: 0x201D, 149: 0x2022,
+  150: 0x2013, 151: 0x2014, 152: 0x02DC, 153: 0x2122, 154: 0x0161, 155: 0x203A,
+  156: 0x0153, 157: 0xFFFD, // substituição
+  158: 0x017E, 159: 0x0178
+};
 
-    
+// Função para retornar caractere visível
+function charWin1252(code) {
+  if (code >= 128 && code <= 159 && !win1252[code]) return "�"; // caractere substituição
+  return win1252[code] ? String.fromCharCode(win1252[code]) : String.fromCharCode(code);
+}
+
+function extendedDescription(code) {
+  if (code >= 128 && code <= 159)
+    return "Control character (ISO-8859-1)";
+  if (code >= 160 && code <= 191)
+    return "Punctuation / Symbol (Latin-1)";
+  if (code >= 192 && code <= 214)
+    return "Uppercase accented letter (Latin-1)";
+  if (code >= 215 && code <= 255 && (code != 247 && code != 255))
+    return "Lowercase accented letter (Latin-1)";
+  if (code == 247 || code == 255)
+    return "Special symbol / letter (Latin-1)";
+  return "Extended character";
+}
+
+const extendedBody = document.getElementById("ascii-extended-body");
+
+for (let i = 128; i <= 255; i++) {
+  extendedBody.innerHTML += `
+    <tr>
+      <td>${charWin1252(i)}</td>
+      <td>${i}</td>
+      <td>${i.toString(16).toUpperCase()}</td>
+      <td>${i.toString(2).padStart(8,"0")}</td>
+      <td class="description">${extendedDescription(i)}</td>
+    </tr>
+  `;
+}
+
+/* ================= TABLE SWITCH ================= */
+
+function showTable(type) {
+const tables = ["main","control","extended"];
+tables.forEach(t=>{
+document.getElementById("table-"+t).classList.add("hidden");
+document.getElementById("btn-"+t).classList.remove("active");
+});
+document.getElementById("table-"+type).classList.remove("hidden");
+document.getElementById("btn-"+type).classList.add("active");
+}
+
+/* ================= CONVERTER ================= */
 
 function convertUniversal() {
-    const from = document.getElementById("fromType").value;
-    const to = document.getElementById("toType").value;
-    const input = document.getElementById("inputValue").value.trim();
+const from = fromType.value;
+const to = toType.value;
+const input = inputValue.value.trim();
+if(!input) return;
 
-    if (!input) return;
+let codes=[];
+switch(from){
+case"text": codes=[...input].map(c=>c.charCodeAt(0)); break;
+case"bin": codes=input.split(/\s+/).map(v=>parseInt(v,2)); break;
+case"dec": codes=input.split(/\s+/).map(v=>parseInt(v,10)); break;
+case"hex": codes=input.split(/\s+/).map(v=>parseInt(v,16)); break;
+case"oct": codes=input.split(/\s+/).map(v=>parseInt(v,8)); break;
+}
 
-    // 1️⃣ Converter tudo para códigos ASCII (array de números)
-    let asciiCodes = [];
+codes=codes.filter(n=>!isNaN(n)&&n>=0&&n<=255);
 
-    switch (from) {
-        case "text":
-        asciiCodes = [...input].map(c => c.charCodeAt(0));
-        break;
+let out="";
+switch(to){
+case"text": out=codes.map(c=>String.fromCharCode(c)).join(""); break;
+case"bin": out=codes.map(c=>c.toString(2).padStart(8,"0")).join(" "); break;
+case"dec": out=codes.join(" "); break;
+case"hex": out=codes.map(c=>c.toString(16).toUpperCase()).join(" "); break;
+case"oct": out=codes.map(c=>c.toString(8)).join(" "); break;
+}
 
-        case "bin":
-        asciiCodes = input.split(/\s+/).map(b => parseInt(b, 2));
-        break;
-
-        case "dec":
-        asciiCodes = input.split(/\s+/).map(d => parseInt(d, 10));
-        break;
-
-        case "hex":
-        asciiCodes = input.split(/\s+/).map(h => parseInt(h, 16));
-        break;
-
-        case "oct":
-        asciiCodes = input.split(/\s+/).map(o => parseInt(o, 8));
-        break;
-    }
-
-    // 2️⃣ Converter ASCII para o destino
-    let output = "";
-
-    switch (to) {
-        case "text":
-        output = asciiCodes.map(c => String.fromCharCode(c)).join("");
-        break;
-
-        case "bin":
-        output = asciiCodes.map(c => c.toString(2).padStart(8, "0")).join(" ");
-        break;
-
-        case "dec":
-        output = asciiCodes.join(" ");
-        break;
-
-        case "hex":
-        output = asciiCodes.map(c => c.toString(16).toUpperCase()).join(" ");
-        break;
-
-        case "oct":
-        output = asciiCodes.map(c => c.toString(8)).join(" ");
-        break;
-    }
-
-    document.getElementById("outputValue").value = output;
-    }
-
-    </script>
+outputValue.value=out;
+}
+</script>
 </body>
 </html>

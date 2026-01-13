@@ -1,128 +1,114 @@
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
-    background: #111;
-    color: #fff;
-    font-family: "Press Start 2P";
-    }
+background:#111;
+color:#fff;
+font-family:"Press Start 2P";
+}
 
 main {
-    width: 95%;
-    margin: auto;
+width:95%;
+margin:auto;
 }
 
 h1 {
-    text-align: center;
-    margin-bottom: 20px;
+text-align:center;
+margin-bottom:20px;
 }
 
+/* TABLE SELECTOR */
 
+.table-selector {
+display:flex;
+gap:8px;
+margin-bottom:16px;
+}
 
-/* ======================
-TABLE
-====================== */
+.table-selector button {
+flex:1;
+font-size:10px;
+font-family:"Press Start 2P";
+background:transparent;
+color:#fff;
+border:1px solid rgba(255,255,255,0.25);
+padding:8px;
+cursor:pointer;
+}
+
+.table-selector button.active {
+color:#ffd800;
+border-color:#ffd800;
+background:rgba(255,216,0,0.1);
+}
+
+/* TABLE */
 
 table {
-    width: 100%;
-    border-collapse: collapse;
-    background: transparent;
+width:100%;
+border-collapse:collapse;
 }
 
-th,
-td {
-    padding: 8px;
-    font-size: 10px;
-    text-align: center;
+th, td {
+padding:8px;
+font-size:10px;
+text-align:center;
 }
 
-th {
-    color: #ffd800;
-}
+th { color:#ffd800; }
 
 td.description {
-    text-align: left;
+  display: flex;
+  align-items: center;   /* centra verticalmente */
+  justify-content: center; /* centra a "caixa" */
+  text-align: left;      /* texto alinhado à esquerda */
 }
-
-/* ======================
-ROWS
-====================== */
 
 tbody tr:not(:last-child) td {
-    border-bottom: 1px solid rgba(255,255,255,0.15);
+border-bottom:1px solid rgba(255,255,255,0.15);
 }
 
-/* ======================
-CONVERTER
-====================== */
+/* CONVERTER */
 
 .converter {
-    margin-top: 24px;
-    padding-top: 16px;
-    border-top: 1px solid rgba(255,255,255,0.15);
-    }
+margin-top:24px;
+padding-top:16px;
+border-top:1px solid rgba(255,255,255,0.15);
+}
 
 .converter-row {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    margin-bottom: 8px;
-    font-size: 10px;
+display:flex;
+gap:12px;
+align-items:center;
+font-size:10px;
+margin-bottom:8px;
 }
 
-.converter label {
-    opacity: 0.8;
-}
-
-/* Inputs, selects e textareas*/
 .converter select,
 .converter textarea,
 .converter button {
-    font-family: "Press Start 2P";
-    font-size: 10px;
-    background: transparent;
-    color: #fff;
-    border: 1px solid rgba(255,255,255,0.25);
-    padding: 6px 8px;
+font-family:"Press Start 2P";
+font-size:10px;
+background:transparent;
+color:#fff;
+border:1px solid rgba(255,255,255,0.25);
+padding:6px;
 }
 
-/* Labels not white */
-option {
-    font-family: "Press Start 2P";
-    font-size: 10px;
-    color: black;
-}
-
-
-
-/* Select */
-.converter select {
-    cursor: pointer;
-}
-
-/* Textareas */
 .converter textarea {
-    width: 100%;
-    min-height: 56px;
-    resize: vertical;
-    margin-bottom: 8px;
+width:100%;
+min-height:56px;
+resize:vertical;
+margin-bottom:8px;
 }
 
-/* Botão */
 .converter button {
-    background: transparent;
-    color: #ffd800;
-    border-color: #ffd800;
-    cursor: pointer;
-    margin-bottom: 8px;
+color:#ffd800;
+border-color:#ffd800;
+cursor:pointer;
 }
 
 .converter button:hover {
-    background: rgba(255,216,0,0.1);
+background:rgba(255,216,0,0.1);
 }
 
-/* Resultado */
-#outputValue {
-    opacity: 0.9;
-}
+.hidden { display:none; }

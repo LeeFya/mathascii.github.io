@@ -113,7 +113,7 @@
 
     const tbody = document.getElementById("ascii-body");
 
-    for (let dec = 32; dec <= 127; dec++) {
+    for (let dec = 0; dec <= 255; dec++) {
     const tr = document.createElement("tr");
     //fazer o calculo automatico 
     const oct = dec.toString(8).padStart(3, "0");

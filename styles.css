@@ -1,0 +1,128 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: #111;
+    color: #fff;
+    font-family: "Press Start 2P";
+    }
+
+main {
+    width: 95%;
+    margin: auto;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+
+
+/* ======================
+TABLE
+====================== */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: transparent;
+}
+
+th,
+td {
+    padding: 8px;
+    font-size: 10px;
+    text-align: center;
+}
+
+th {
+    color: #ffd800;
+}
+
+td.description {
+    text-align: left;
+}
+
+/* ======================
+ROWS
+====================== */
+
+tbody tr:not(:last-child) td {
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+/* ======================
+CONVERTER
+====================== */
+
+.converter {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    }
+
+.converter-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 10px;
+}
+
+.converter label {
+    opacity: 0.8;
+}
+
+/* Inputs, selects e textareas*/
+.converter select,
+.converter textarea,
+.converter button {
+    font-family: "Press Start 2P";
+    font-size: 10px;
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 6px 8px;
+}
+
+/* Labels not white */
+option {
+    font-family: "Press Start 2P";
+    font-size: 10px;
+    color: black;
+}
+
+
+
+/* Select */
+.converter select {
+    cursor: pointer;
+}
+
+/* Textareas */
+.converter textarea {
+    width: 100%;
+    min-height: 56px;
+    resize: vertical;
+    margin-bottom: 8px;
+}
+
+/* Botão */
+.converter button {
+    background: transparent;
+    color: #ffd800;
+    border-color: #ffd800;
+    cursor: pointer;
+    margin-bottom: 8px;
+}
+
+.converter button:hover {
+    background: rgba(255,216,0,0.1);
+}
+
+/* Resultado */
+#outputValue {
+    opacity: 0.9;
+}

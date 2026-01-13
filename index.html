@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:ital,wght@0,100..900;1,100..900&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+    <title>ASCII</title>
+</head>
+<body>
+
+    <main>
+    <h1>ASCII TABLE</h1>
+    <div class="pixel-frame">
+        <table>
+            <thead>
+                <tr>
+                    <th>Symbol</th>
+                    <th>DEC</th>
+                    <th>OCT</th>
+                    <th>HEX</th>
+                    <th>BIN</th>
+                    <th>HTML Number</th>
+                    <th>HTML Name</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+
+            <tbody id="ascii-body"></tbody>
+        </table>
+    </div>
+
+    <br><br>
+
+    <div class="converter">
+
+    <div class="converter-row">
+        <label>From</label>
+        <select id="fromType">
+        <option value="text">Text</option>
+        <option value="bin">Binary</option>
+        <option value="dec">Decimal</option>
+        <option value="hex">Hexadecimal</option>
+        <option value="oct">Octal</option>
+        </select>
+
+        <label>To</label>
+        <select id="toType">
+        <option value="text">Text</option>
+        <option value="bin">Binary</option>
+        <option value="dec">Decimal</option>
+        <option value="hex">Hexadecimal</option>
+        <option value="oct">Octal</option>
+        </select>
+    </div>
+
+    <textarea id="inputValue" placeholder="Enter value"></textarea>
+
+    <button type="button" onclick="convertUniversal()">Convert</button>
+
+    <textarea id="outputValue" placeholder="Result" readonly></textarea>
+
+    </div>
+    </main>
+
+    <script>
+    /* ==========================
+    ASCII TABLE DATA
+    ========================== */
+
+    const asciiDescriptions = {
+    32: ["&nbsp;", "Space"],
+    33: ["&excl;", "Exclamation mark"],
+    34: ["&quot;", "Double quotes"],
+    35: ["&num;", "Number sign"],
+    36: ["&dollar;", "Dollar"],
+    37: ["&percnt;", "Percent sign"],
+    38: ["&amp;", "Ampersand"],
+    39: ["&apos;", "Single quote"],
+    40: ["&lparen;", "Open parenthesis"],
+    41: ["&rparen;", "Close parenthesis"],
+    42: ["&ast;", "Asterisk"],
+    43: ["&plus;", "Plus"],
+    44: ["&comma;", "Comma"],
+    45: ["", "Hyphen-minus"],
+    46: ["&period;", "Period"],
+    47: ["&sol;", "Slash"],
+    58: ["&colon;", "Colon"],
+    59: ["&semi;", "Semicolon"],
+    60: ["&lt;", "Less than"],
+    61: ["&equals;", "Equals"],
+    62: ["&gt;", "Greater than"],
+    63: ["&quest;", "Question mark"],
+    64: ["&commat;", "At sign"],
+    91: ["&lsqb;", "Opening bracket"],
+    92: ["&bsol;", "Backslash"],
+    93: ["&rsqb;", "Closing bracket"],
+    94: ["&Hat;", "Caret"],
+    95: ["&lowbar;", "Underscore"],
+    96: ["&grave;", "Grave accent"],
+    123: ["&lcub;", "Opening brace"],
+    124: ["&verbar;", "Vertical bar"],
+    125: ["&rcub;", "Closing brace"],
+    126: ["&tilde;", "Tilde"],
+    127: ["", "Delete"]
+    };
+
+    /* ==========================
+    BUILD ASCII TABLE
+    ========================== */
+
+    const tbody = document.getElementById("ascii-body");
+
+    for (let dec = 32; dec <= 127; dec++) {
+    const tr = document.createElement("tr");
+    //fazer o calculo automatico 
+    const oct = dec.toString(8).padStart(3, "0");
+    const hex = dec.toString(16).toUpperCase();
+    const bin = dec.toString(2).padStart(8, "0");
+    //aparecer simbolo do space e delete
+    const symbol =
+        dec === 32 ? "SP" :
+        dec === 127 ? "DEL" :
+        String.fromCharCode(dec);
+    const htmlNum = `&#${dec};`;
+
+    let htmlName = "";
+    let description = "";
+
+    if (asciiDescriptions[dec]) {
+        htmlName = asciiDescriptions[dec][0];
+        description = asciiDescriptions[dec][1];
+    } else if (dec >= 48 && dec <= 57) {
+        description = "Digit";
+    } else if (dec >= 65 && dec <= 90) {
+        description = "Uppercase letter";
+    } else if (dec >= 97 && dec <= 122) {
+        description = "Lowercase letter";
+    }
+
+    tr.innerHTML = `
+        <td>${symbol}</td>
+        <td>${dec}</td>
+        <td>${oct}</td>
+        <td>${hex}</td>
+        <td>${bin}</td>
+        <td>${htmlNum}</td>
+        <td>${htmlName}</td>
+        <td class="description">${description}</td>
+    `;
+
+    tbody.appendChild(tr);
+    }
+
+    
+
+function convertUniversal() {
+    const from = document.getElementById("fromType").value;
+    const to = document.getElementById("toType").value;
+    const input = document.getElementById("inputValue").value.trim();
+
+    if (!input) return;
+
+    // 1️⃣ Converter tudo para códigos ASCII (array de números)
+    let asciiCodes = [];
+
+    switch (from) {
+        case "text":
+        asciiCodes = [...input].map(c => c.charCodeAt(0));
+        break;
+
+        case "bin":
+        asciiCodes = input.split(/\s+/).map(b => parseInt(b, 2));
+        break;
+
+        case "dec":
+        asciiCodes = input.split(/\s+/).map(d => parseInt(d, 10));
+        break;
+
+        case "hex":
+        asciiCodes = input.split(/\s+/).map(h => parseInt(h, 16));
+        break;
+
+        case "oct":
+        asciiCodes = input.split(/\s+/).map(o => parseInt(o, 8));
+        break;
+    }
+
+    // 2️⃣ Converter ASCII para o destino
+    let output = "";
+
+    switch (to) {
+        case "text":
+        output = asciiCodes.map(c => String.fromCharCode(c)).join("");
+        break;
+
+        case "bin":
+        output = asciiCodes.map(c => c.toString(2).padStart(8, "0")).join(" ");
+        break;
+
+        case "dec":
+        output = asciiCodes.join(" ");
+        break;
+
+        case "hex":
+        output = asciiCodes.map(c => c.toString(16).toUpperCase()).join(" ");
+        break;
+
+        case "oct":
+        output = asciiCodes.map(c => c.toString(8)).join(" ");
+        break;
+    }
+
+    document.getElementById("outputValue").value = output;
+    }
+
+    </script>
+</body>
+</html>
